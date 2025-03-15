@@ -1,0 +1,7 @@
+@import 'tailwindcss';
+
+@layer utilities {
+    .card {
+        @apply relative size-full px-8 py-4 bg-white rounded-xl drop-shadow-xl
+    }
+}
