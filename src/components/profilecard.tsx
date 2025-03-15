@@ -5,9 +5,11 @@ interface ProfileDetailsTypes {
     personal_email: string;
     organization_email: string;
     phone_number: number;
+    department_name: string;
+    role: string;
 }
 
-export const ProfileCard = ({ name, personal_email, organization_email, phone_number }: ProfileDetailsTypes) => {
+export const ProfileCard = ({ name, personal_email, organization_email, phone_number, department_name, role }: ProfileDetailsTypes) => {
     return (
         <div className="card">
             <div className="flex justify-end">
@@ -26,7 +28,7 @@ export const ProfileCard = ({ name, personal_email, organization_email, phone_nu
                 <div className="text-center md:text-left">
                     <div className="mb-3">
                         <div className="text-2xl font-extrabold text-gray-800">{name}</div>
-                        <div className="text-gray-500 text-sm">AI Senior Faculty</div>
+                        <div className="text-gray-500 text-sm">{department_name} - {role}</div>
                     </div>
 
                     <div className="text-gray-600 text-sm space-y-1">

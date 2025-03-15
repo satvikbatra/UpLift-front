@@ -23,6 +23,8 @@ export const Dashboard = () => {
                         personal_email={details.personal_email_id}
                         organization_email={details.organization_email_id}
                         phone_number={details.phone_number}
+                        department_name={details.department_name}
+                        role={details.role}
                     />
                 </div>
 

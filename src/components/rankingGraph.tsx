@@ -34,7 +34,7 @@ export const RankingGraph = ({projects, otherAchievements, researchPapers, semin
             <div className="flex-1 flex justify-center items-center min-w-0">
                 <div className="card flex justify-center items-center">
                     <PieChartWithCenterLabel
-                        data={pieData}
+                        stats={pieData}
                         label={averageRating}
                     />
                 </div>

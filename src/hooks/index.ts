@@ -7,6 +7,8 @@ interface UserDetails {
     personal_email_id: string;
     organization_email_id: string;
     phone_number: number;
+    department_name: string;
+    role: string
     projects: object,
     seminars: object,
     certificates: object,
@@ -22,6 +24,8 @@ export const useDetails = () => {
         personal_email_id: "",
         organization_email_id: "",
         phone_number: 0,
+        department_name: "",
+        role: "",
         projects: {},
         seminars: {},
         certificates: {},
