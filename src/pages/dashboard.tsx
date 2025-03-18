@@ -1,7 +1,9 @@
 import { AppBar } from "../components/appbar";
 import BarCh from "../components/barChart";
 import { ProfileCard } from "../components/profilecard";
+// import { Project } from "../components/projects";
 import { RankingGraph } from "../components/rankingGraph";
+import { Research } from "../components/research";
 import { useDetails } from "../hooks";
 
 export const Dashboard = () => {
@@ -22,8 +24,8 @@ export const Dashboard = () => {
     console.log(Data)
 
     return (
-        <div className="min-h-screen bg-blue-200 flex-1 flex-col">
-            <div className="mb-4 bg-white">
+        <div className="relative min-h-screen bg-blue-200 flex-1 flex-col">
+            <div className="sticky top-0 z-50 w-full mb-4 bg-white">
                 <AppBar />
             </div>
 
@@ -50,6 +52,13 @@ export const Dashboard = () => {
 
                 <div className="card">
                     <BarCh stats={Data} />
+                </div>
+
+                <div className="card">
+                    <Research />
+                </div>
+                <div>
+                    {/* <Project /> */}
                 </div>
             </div>
         </div>

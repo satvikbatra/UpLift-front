@@ -4,4 +4,8 @@
     .card {
         @apply relative h-full w-full px-6 py-4 bg-white rounded-xl drop-shadow-xl
     }
+
+    .button {
+        @apply bg-blue-500 text-white py-2 px-4 rounded-md w-fit cursor-pointer
+    }
 }

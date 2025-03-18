@@ -17,6 +17,44 @@ interface UserDetails {
     averageRating: number
 }
 
+interface ResearchPaper {
+    _id: string;
+    user: string;
+    title: string;
+    description: string;
+    certificate_of_publication: string;
+    verification_link: string;
+    conference_name: string;
+    publish_date: string;
+    rating: number;
+}
+
+interface Details {
+    researchPapers?: ResearchPaper[];
+}
+
+export const useResearch = (reload: boolean) => {
+    const [loading, setLoading] = useState(true);
+    const [details, setDetails] = useState<Details>({researchPapers: []});
+
+    useEffect(() => {
+        axios.get(`${BACKEND_URL}/researchPapers`, {
+            headers: {
+                Authorization: "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdhbml6YXRpb25fZW1haWxfaWQiOiJyYWh1bC5uYWlyQGJlbm5ldHQuZWR1LmluIiwiaWF0IjoxNzQxNzIyMzU1fQ.UgZyiUhfAyb6fgWnzMZXj3V3ulq8t_PE52jJTSjosqQ"
+            }
+        })
+        .then(response => {
+            setDetails(response.data || [])
+            setLoading(false)
+        })
+    }, [reload])
+
+    return {
+        loading,
+        details
+    }
+}
+
 export const useDetails = () => {
     const [loading, setLoading] = useState(true);
     const [details, setDetails] = useState<UserDetails>({
@@ -50,4 +88,14 @@ export const useDetails = () => {
         loading,
         details
     }
+}
+
+
+export const useDialog = () => {
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  return { open, handleOpen, handleClose };
 }
