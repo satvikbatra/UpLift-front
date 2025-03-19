@@ -19,36 +19,39 @@ function PieCenterLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function PieChartWithCenterLabel({ 
-  stats = [], 
-  label 
-}: { 
-  stats: { id: string; value: number, color: string }[], 
-  label?: number 
+export default function PieChartWithCenterLabel({
+  stats = [],
+  label,
+}: {
+  stats: { id: string; value: number; color: string }[];
+  label?: number;
 }) {
   if (!stats.length) {
-    return <div className="flex items-center justify-center text-gray-500">No Data Available</div>;
+    return (
+      <div className="flex items-center justify-center text-gray-500">
+        No Data Available
+      </div>
+    );
   }
 
   return (
     <div className="flex items-center justify-center w-full h-full">
       <PieChart
-        series={[{
-          data: stats,
-          innerRadius: "70%",
-          outerRadius: "90%",
-          cx: "50%",
-          cy: "50%",
-        }]}
+        series={[
+          {
+            data: stats,
+            innerRadius: "70%",
+            outerRadius: "90%",
+            cx: "50%",
+            cy: "50%",
+          },
+        ]}
         width={200}
         height={200}
         margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
         slotProps={{ legend: { hidden: true } }}
       >
-      
-      <PieCenterLabel>
-        Rating: {label ? label.toFixed(2) : ""}
-      </PieCenterLabel>
+        <PieCenterLabel>Rating: {label ? label.toFixed(2) : ""}</PieCenterLabel>
       </PieChart>
     </div>
   );

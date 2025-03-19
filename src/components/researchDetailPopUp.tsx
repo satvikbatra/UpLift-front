@@ -2,18 +2,13 @@ import Dialog from "@mui/material/Dialog";
 import axios from "axios";
 import { BACKEND_URL } from "../config";
 import { useEffect, useState } from "react";
-import ResponsiveDialog from "./researchPopUp";
-import { deleteResearchPaper } from "../hooks/postData";
-
-export interface PaperTypes {
-  _id: string,
-  title: string;
-  description: string;
-  verification_link?: string;
-  conference_name?: string;
-  publish_date?: string;
-  certificate_of_publication?: string | null;
-}
+import {
+  deleteEntry,
+  EntryFormDataType,
+  updateResearchPaper,
+} from "../hooks/postData";
+import { FormPopUp } from "./formPopUp";
+import { ResearchPaperTypes } from "../hooks";
 
 interface ResearchDetailsDialogProps {
   open: boolean;
@@ -26,11 +21,12 @@ export const ResearchDetailsDialog = ({
   open,
   onClose,
   id,
-  refreshData
+  refreshData,
 }: ResearchDetailsDialogProps) => {
-  const [paper, setPaper] = useState<PaperTypes | null>(null);
+  const [paper, setPaper] = useState<ResearchPaperTypes | null>(null);
   const [loading, setLoading] = useState(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (!id || !open) return;
@@ -51,7 +47,6 @@ export const ResearchDetailsDialog = ({
           }
         );
         setPaper(response.data.researchPaper);
-        console.log(paper)
       } catch (error) {
         console.error("Error fetching research paper:", error);
       } finally {
@@ -105,70 +100,99 @@ export const ResearchDetailsDialog = ({
             )}
 
             {/* {paper.certificate_of_publication && (
-                            <div className="mt-4">
-                                <p className="text-gray-600 font-medium">Certificate:</p>
+                <div className="mt-4">
+                    <p className="text-gray-600 font-medium">Certificate:</p>
 
-                                {paper.certificate_of_publication.match(/\.(jpeg|jpg|png)$/) && (
-                                    <img 
-                                        src={paper.certificate_of_publication} 
-                                        alt="certificate_of_publication" 
-                                        className="mt-2 w-full max-w-md rounded-lg shadow-md border"
-                                    />
-                                )}
+                    {paper.certificate_of_publication.match(/\.(jpeg|jpg|png)$/) && (
+                        <img 
+                            src={paper.certificate_of_publication} 
+                            alt="certificate_of_publication" 
+                            className="mt-2 w-full max-w-md rounded-lg shadow-md border"
+                        />
+                    )}
 
-                                {paper.certificate_of_publication.endsWith(".pdf") && (
-                                    <iframe 
-                                        src={paper.certificate_of_publication} 
-                                        className="mt-2 w-full h-96 border rounded-lg shadow-md"
-                                    />
-                                )}
+                    {paper.certificate_of_publication.endsWith(".pdf") && (
+                        <iframe 
+                            src={paper.certificate_of_publication} 
+                            className="mt-2 w-full h-96 border rounded-lg shadow-md"
+                        />
+                    )}
 
-                                {!paper.certificate_of_publication.match(/\.(jpeg|jpg|png|pdf)$/) && (
-                                    <a 
-                                        href={paper.certificate_of_publication} 
-                                        target="_blank" 
-                                        rel="noopener noreferrer" 
-                                        className="text-blue-500 underline hover:text-blue-700"
-                                    >
-                                        Download certificate_of_publication
-                                    </a>
-                                )}
-                            </div>
-                        )} */}
+                    {!paper.certificate_of_publication.match(/\.(jpeg|jpg|png|pdf)$/) && (
+                        <a 
+                            href={paper.certificate_of_publication} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="text-blue-500 underline hover:text-blue-700"
+                        >
+                            Download certificate_of_publication
+                        </a>
+                    )}
+                </div>
+            )} */}
 
             <div className="flex justify-end cursor-pointer gap-2">
               <button
                 onClick={async () => {
-                    try {
-                      await deleteResearchPaper(paper._id);
-                      setPaper(null);
-                      refreshData();
-                      onClose();
-                    } catch (error) {
-                      console.error("Error deleting research paper:", error);
-                      alert("Failed to delete the research paper.");
-                    }
-                  }}
+                  setDeleting(true);
+                  try {
+                    await deleteEntry("researchPapers", id);
+                    refreshData();
+                    onClose();
+                  } catch (error) {
+                    console.error("Error deleting achievement:", error);
+                    alert("Failed to delete. Please try again.");
+                  } finally {
+                    setDeleting(false);
+                  }
+                }}
                 className="button"
+                disabled={deleting} 
               >
-                Delete
+                {deleting ? "Deleting..." : "Delete"}
               </button>
-              <button
-                onClick={() => setIsUpdateOpen(true)}
-                className="button"
-              >
+              <button onClick={() => setIsUpdateOpen(true)} className="button">
                 Update Details
               </button>
-              <button
-                onClick={onClose}
-                className="button"
-              >
+              <button onClick={onClose} className="button">
                 Close
               </button>
             </div>
           </div>
         )}
-        <ResponsiveDialog open={isUpdateOpen} onClose={() => setIsUpdateOpen(false)} initialData={paper || undefined} refreshData={refreshData} />
+
+        <FormPopUp
+          open={isUpdateOpen}
+          onClose={() => setIsUpdateOpen(false)}
+          initialData={paper || undefined}
+          refreshData={refreshData}
+          fields={[
+            { label: "Title", name: "title", type: "text", required: true },
+            {
+              label: "Description",
+              name: "description",
+              type: "textarea",
+              required: true,
+            },
+            {
+              label: "Certificate",
+              name: "certificate_of_publication",
+              type: "file",
+            },
+            {
+              label: "Verification Link",
+              name: "verification_link",
+              type: "url",
+            },
+            { label: "Conference Name", name: "conference_name", type: "text" },
+            { label: "Published Date", name: "publish_date", type: "date" },
+          ]}
+          onSubmit={async (formData) => {
+            const typedFormData = formData as EntryFormDataType;
+            updateResearchPaper(typedFormData, typedFormData._id || "");
+          }}
+          title={"Update Research Paper"}
+        />
       </div>
     </Dialog>
   );

@@ -3,16 +3,16 @@ import { useDialog, useEntries } from "../hooks";
 import { ListDisplay } from "./listDisplay";
 import { FormPopUp } from "./formPopUp";
 import { EntryFormDataType, submitEntry } from "../hooks/postData";
-import { ProjectDetailsDialog } from "./projectsDetailPopUp";
+import { CertificateDetailsDialog } from "./certificatesDetailPopUp";
 
-export const Projects = () => {
+export const Certificates = () => {
   const [reload, setReload] = useState(false);
 
   const refreshData = () => {
     setReload((prev) => !prev);
   };
 
-  const { loading, details } = useEntries("projects", reload);
+  const { loading, details } = useEntries("certificates", reload);
 
   const {
     open: addOpen,
@@ -25,22 +25,24 @@ export const Projects = () => {
     handleClose: handleDetailsClose,
   } = useDialog();
 
-  const [selectedProjectId, setSelectedProjectId] = useState("");
+  const [selectedCertificateId, setSelectedCertificateId] = useState("");
 
   if (loading) {
     return <div className="flex justify-center items-center">Loading...</div>;
   }
 
   const openDetailsDialog = (id: string) => {
-    setSelectedProjectId(id);
+    setSelectedCertificateId(id);
     handleDetailsOpen();
   };
+
+  console.log(details);
 
   return (
     <div>
       <ListDisplay
-        title="Projects"
-        items={details?.projects || []}
+        title="Certificates"
+        items={details?.certificates || []}
         onAdd={handleAddOpen}
         onViewDetails={openDetailsDialog}
       />
@@ -53,7 +55,14 @@ export const Projects = () => {
           refreshData={refreshData}
           fields={[
             {
-              label: "Project Name",
+              label: "Platform",
+              name: "platform",
+              type: "text",
+              required: true,
+            },
+            { label: "Field", name: "field", type: "text", required: true },
+            {
+              label: "Certificate Title",
               name: "title",
               type: "text",
               required: true,
@@ -65,40 +74,29 @@ export const Projects = () => {
               required: true,
             },
             {
-              label: "GitHub Repository",
-              name: "github_link",
+              label: "Verification Link",
+              name: "verification_link",
               type: "url",
               required: true,
             },
-            {
-              label: "Tech Stack",
-              name: "tech_stack",
-              type: "array",
-              required: true,
-            },
-            {
-              label: "Completion Date",
-              name: "date",
-              type: "date",
-              required: true,
-            },
+            { label: "Issue Date", name: "date", type: "date", required: true },
           ]}
           onSubmit={async (formData) => {
             const typedFormData = formData as EntryFormDataType;
-            submitEntry("projects", typedFormData);
+            submitEntry("certificates", typedFormData);
           }}
-          title={"Add Project"}
+          title={"Add Certificate"}
         />
       }
 
-      {selectedProjectId && (
-        <ProjectDetailsDialog
+      {selectedCertificateId && (
+        <CertificateDetailsDialog
           open={detailsOpen}
           onClose={() => {
-            handleDetailsClose();
-            refreshData();
+            handleDetailsClose(),
+            refreshData()
           }}
-          id={selectedProjectId}
+          id={selectedCertificateId}
           refreshData={refreshData}
         />
       )}

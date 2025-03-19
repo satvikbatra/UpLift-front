@@ -9,10 +9,16 @@ import {
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip);
 
-export default function BarCh({ stats = [] }: { stats: { id: string; value: number; color: string }[] }) {
+export default function BarCh({
+  stats = [],
+}: {
+  stats: { id: string; value: number; color: string }[];
+}) {
   return (
-    <div className="w-full h-[350px] sm:h-[400px] md:h-[450px] lg:h-[500px] 
-                    px-2 sm:px-4 md:px-6 lg:px-8 xl:px-12 pt-4 sm:pt-6 md:pt-8 lg:pt-10">
+    <div
+      className="w-full h-[350px] sm:h-[400px] md:h-[450px] lg:h-[500px] 
+                    px-2 sm:px-4 md:px-6 lg:px-8 xl:px-12 pt-4 sm:pt-6 md:pt-8 lg:pt-10"
+    >
       <Bar
         data={{
           labels: stats.map((item) => item.id),
