@@ -4,6 +4,7 @@ import { ListDisplay } from "./listDisplay";
 import { FormPopUp } from "./formPopUp";
 import { EntryFormDataType, submitEntry } from "../hooks/postData";
 import { ProjectDetailsDialog } from "./projectsDetailPopUp";
+import { Skeleton } from "./skeleton";
 
 export const Projects = () => {
   const [reload, setReload] = useState(false);
@@ -28,7 +29,7 @@ export const Projects = () => {
   const [selectedProjectId, setSelectedProjectId] = useState("");
 
   if (loading) {
-    return <div className="flex justify-center items-center">Loading...</div>;
+    return <Skeleton type="list" count={2} />;
   }
 
   const openDetailsDialog = (id: string) => {

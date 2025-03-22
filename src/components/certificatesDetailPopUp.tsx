@@ -19,7 +19,9 @@ export const CertificateDetailsDialog = ({
   id,
   refreshData,
 }: CertificateDetailsDialogProps) => {
-  const [certificate, setCertificate] = useState<CertificatesTypes | null>(null);
+  const [certificate, setCertificate] = useState<CertificatesTypes | null>(
+    null
+  );
   const [loading, setLoading] = useState(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -36,7 +38,7 @@ export const CertificateDetailsDialog = ({
           headers: {
             Authorization:
               "Bearer " +
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdhbml6YXRpb25fZW1haWxfaWQiOiJyYWh1bC5uYWlyQGJlbm5ldHQuZWR1LmluIiwiaWF0IjoxNzQxNzIyMzU1fQ.UgZyiUhfAyb6fgWnzMZXj3V3ulq8t_PE52jJTSjosqQ",
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdhbml6YXRpb25fZW1haWxfaWQiOiJlMjJjc2V1MTQ5MUBiZW5uZXR0LmVkdS5pbiIsImlhdCI6MTc0MjYwMTE1MH0.REP7xtfWb7xnDWXZOvl3Ts64VJ-Q3LaDTw1DBtG34y4",
           },
         });
         setCertificate(response.data.certificate);
@@ -114,7 +116,7 @@ export const CertificateDetailsDialog = ({
                   }
                 }}
                 className="button"
-                disabled={deleting} 
+                disabled={deleting}
               >
                 {deleting ? "Deleting..." : "Delete"}
               </button>
@@ -168,7 +170,16 @@ export const CertificateDetailsDialog = ({
           ]}
           onSubmit={async (formData) => {
             const typedFormData = formData as EntryFormDataType;
-            updateEntry("certificates", typedFormData, typedFormData._id || "");
+            const result = await updateEntry(
+              "certificates",
+              typedFormData,
+              typedFormData._id || ""
+            );
+            if (result) {
+              refreshData();
+              setIsUpdateOpen(false);
+            }
+            return result;
           }}
           title={"Update Certificate Details"}
         />

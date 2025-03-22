@@ -4,6 +4,7 @@ import { ListDisplay } from "./listDisplay";
 import { FormPopUp } from "./formPopUp";
 import { EntryFormDataType, submitEntry } from "../hooks/postData";
 import { CertificateDetailsDialog } from "./certificatesDetailPopUp";
+import { Skeleton } from "./skeleton";
 
 export const Certificates = () => {
   const [reload, setReload] = useState(false);
@@ -28,15 +29,13 @@ export const Certificates = () => {
   const [selectedCertificateId, setSelectedCertificateId] = useState("");
 
   if (loading) {
-    return <div className="flex justify-center items-center">Loading...</div>;
+    return <Skeleton type="list" count={2} />;
   }
 
   const openDetailsDialog = (id: string) => {
     setSelectedCertificateId(id);
     handleDetailsOpen();
   };
-
-  console.log(details);
 
   return (
     <div>
@@ -93,8 +92,7 @@ export const Certificates = () => {
         <CertificateDetailsDialog
           open={detailsOpen}
           onClose={() => {
-            handleDetailsClose(),
-            refreshData()
+            handleDetailsClose(), refreshData();
           }}
           id={selectedCertificateId}
           refreshData={refreshData}

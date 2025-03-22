@@ -8,7 +8,6 @@ export interface EntryFormDataType {
   certificate_of_publication?: File | null;
   verification_link?: string;
   conference_name?: string;
-  publish_date?: string | "";
   github_link?: string;
   tech_stack?: string[];
   date?: string | "";
@@ -17,54 +16,19 @@ export interface EntryFormDataType {
 
 export const deleteEntry = async (prop: string, id: string) => {
   try {
-    await axios.delete(`${BACKEND_URL}/${prop}/${id}`, {
+    const res = await axios.delete(`${BACKEND_URL}/${prop}/${id}`, {
       headers: {
         Authorization:
           "Bearer " +
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdhbml6YXRpb25fZW1haWxfaWQiOiJyYWh1bC5uYWlyQGJlbm5ldHQuZWR1LmluIiwiaWF0IjoxNzQxNzIyMzU1fQ.UgZyiUhfAyb6fgWnzMZXj3V3ulq8t_PE52jJTSjosqQ",
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdhbml6YXRpb25fZW1haWxfaWQiOiJlMjJjc2V1MTQ5MUBiZW5uZXR0LmVkdS5pbiIsImlhdCI6MTc0MjYwMTE1MH0.REP7xtfWb7xnDWXZOvl3Ts64VJ-Q3LaDTw1DBtG34y4",
       },
     });
+    alert(`${prop} deleted successfully`);
+    if (res.status === 200) {
+      return res.data;
+    }
   } catch (e) {
-    alert("Not able to delete Research Paper. Try again later");
-    console.log(e);
-  }
-};
-
-export const submitResearchPaper = async (formData: EntryFormDataType) => {
-  try {
-    await axios.post(`${BACKEND_URL}/researchPapers/add`, formData, {
-      headers: {
-        Authorization:
-          "Bearer " +
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdhbml6YXRpb25fZW1haWxfaWQiOiJyYWh1bC5uYWlyQGJlbm5ldHQuZWR1LmluIiwiaWF0IjoxNzQxNzIyMzU1fQ.UgZyiUhfAyb6fgWnzMZXj3V3ulq8t_PE52jJTSjosqQ",
-      },
-    });
-  } catch (e) {
-    alert("Not able to add Research Paper. Try again later");
-    console.log(e);
-  }
-};
-
-export const updateResearchPaper = async (
-  formData: EntryFormDataType,
-  id: string
-) => {
-  formData.publish_date = formData.publish_date?.split("T")[0];
-  delete formData._id;
-  delete formData.date;
-  console.log(formData);
-  try {
-    await axios.put(`${BACKEND_URL}/researchPapers/${id}`, formData, {
-      headers: {
-        Authorization:
-          "Bearer " +
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdhbml6YXRpb25fZW1haWxfaWQiOiJyYWh1bC5uYWlyQGJlbm5ldHQuZWR1LmluIiwiaWF0IjoxNzQxNzIyMzU1fQ.UgZyiUhfAyb6fgWnzMZXj3V3ulq8t_PE52jJTSjosqQ",
-        "Content-Type": "application/json",
-      },
-    });
-  } catch (e) {
-    alert("Not able to update Research Paper. Try again later");
-    console.log(e);
+    alert(`Not able to delete ${prop}. Try again later`);
   }
 };
 
@@ -72,17 +36,36 @@ export const submitEntry = async (
   entry: string,
   formData: EntryFormDataType
 ) => {
-  try {
-    await axios.post(`${BACKEND_URL}/${entry}/add`, formData, {
-      headers: {
-        Authorization:
-          "Bearer " +
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdhbml6YXRpb25fZW1haWxfaWQiOiJyYWh1bC5uYWlyQGJlbm5ldHQuZWR1LmluIiwiaWF0IjoxNzQxNzIyMzU1fQ.UgZyiUhfAyb6fgWnzMZXj3V3ulq8t_PE52jJTSjosqQ",
-      },
-    });
-  } catch (e) {
-    alert("Not able to add Project. Try again later");
-    console.log(e);
+  const form = new FormData();
+
+  Object.entries(formData).forEach(([key, value]) => {
+    if (value !== undefined && value !== null) {
+      if (key === "certificate_of_publication" && value instanceof File) {
+        form.append(key, value);
+      } else if (key === "tech_stack" && Array.isArray(value)) {
+        value.forEach((tech, index) => {
+          form.append(`tech_stack[${index}]`, tech);
+        });
+      } else {
+        form.append(key, String(value));
+      }
+    }
+  });
+
+  const res = await axios.post(`${BACKEND_URL}/${entry}/add`, form, {
+    headers: {
+      Authorization:
+        "Bearer " +
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdhbml6YXRpb25fZW1haWxfaWQiOiJlMjJjc2V1MTQ5MUBiZW5uZXR0LmVkdS5pbiIsImlhdCI6MTc0MjYwMTE1MH0.REP7xtfWb7xnDWXZOvl3Ts64VJ-Q3LaDTw1DBtG34y4",
+      "Content-Type": "application/json",
+    },
+  });
+
+  alert(`${entry} added successfully`);
+  if (res.status === 200) {
+    return res.data;
+  } else {
+    alert(`Not able to add ${entry}. Try again later`);
   }
 };
 
@@ -92,18 +75,35 @@ export const updateEntry = async (
   id: string
 ) => {
   formData.date = formData.date?.split("T")[0];
-  delete formData._id;
-  try {
-    await axios.put(`${BACKEND_URL}/${entry}/${id}`, formData, {
-      headers: {
-        Authorization:
-          "Bearer " +
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdhbml6YXRpb25fZW1haWxfaWQiOiJyYWh1bC5uYWlyQGJlbm5ldHQuZWR1LmluIiwiaWF0IjoxNzQxNzIyMzU1fQ.UgZyiUhfAyb6fgWnzMZXj3V3ulq8t_PE52jJTSjosqQ",
-        "Content-Type": "application/json",
-      },
-    });
-  } catch (e) {
-    alert("Not able to update Project. Try again later");
-    console.log(e);
+  const form = new FormData();
+
+  Object.entries(formData).forEach(([key, value]) => {
+    if (value !== undefined && value !== null) {
+      if (key === "certificate_of_publication" && value instanceof File) {
+        form.append(key, value);
+      } else if (key === "tech_stack" && Array.isArray(value)) {
+        value.forEach((tech, index) => {
+          form.append(`tech_stack[${index}]`, tech);
+        });
+      } else {
+        form.append(key, String(value));
+      }
+    }
+  });
+
+  const res = await axios.put(`${BACKEND_URL}/${entry}/${id}`, form, {
+    headers: {
+      Authorization:
+        "Bearer " +
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdhbml6YXRpb25fZW1haWxfaWQiOiJlMjJjc2V1MTQ5MUBiZW5uZXR0LmVkdS5pbiIsImlhdCI6MTc0MjYwMTE1MH0.REP7xtfWb7xnDWXZOvl3Ts64VJ-Q3LaDTw1DBtG34y4",
+      "Content-Type": "application/json",
+    },
+  });
+
+  alert(`${entry} updated successfully`);
+  if (res.status === 200) {
+    return res.data;
+  } else {
+    alert(`Not able to update ${entry}. Try again later`);
   }
 };

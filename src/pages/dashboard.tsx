@@ -1,12 +1,14 @@
 import { AppBar } from "../components/appbar";
 import BarCh from "../components/barChart";
 import { Certificates } from "../components/certificates";
+import { DashboardSections } from "../components/dashboardSections";
 import { OtherAchievements } from "../components/otherAchievements";
 import { ProfileCard } from "../components/profilecard";
 import { Projects } from "../components/projects";
 import { RankingGraph } from "../components/rankingGraph";
 import { Research } from "../components/research";
 import { Seminars } from "../components/seminars";
+import { Skeleton } from "../components/skeleton";
 import { useDetails } from "../hooks";
 
 export const Dashboard = () => {
@@ -14,8 +16,29 @@ export const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        Loading...
+      <div className="relative min-h-screen bg-blue-200 flex-1 flex-col">
+        <div className="sticky top-0 z-50 w-full mb-4 bg-white flex items-center">
+          <AppBar />
+        </div>
+
+        <div className="max-w-6xl mx-auto flex flex-col gap-6 p-4 w-full">
+          <div className="card flex flex-col lg:flex-row gap-6 justify-center h-full w-full">
+            <div className="flex-1 gap-4">
+              <Skeleton type="card" />
+            </div>
+            <div className="flex-1 gap-4">
+              <Skeleton type="card" />
+            </div>
+          </div>
+
+          <div className="card">
+            <Skeleton type="card" />
+          </div>
+
+          <div className="flex flex-col gap-6">
+            <Skeleton type="list" count={5} />
+          </div>
+        </div>
       </div>
     );
   }
@@ -55,7 +78,7 @@ export const Dashboard = () => {
 
   return (
     <div className="relative min-h-screen bg-blue-200 flex-1 flex-col">
-      <div className="sticky top-0 z-50 w-full mb-4 bg-white">
+      <div className="sticky top-0 z-50 w-full mb-4 bg-white flex items-center">
         <AppBar />
       </div>
 
@@ -81,21 +104,15 @@ export const Dashboard = () => {
           <BarCh stats={Data} />
         </div>
 
-        <div className="card">
-          <Research />
-        </div>
-        <div className="card">
-          <Projects />
-        </div>
-        <div className="card">
-          <Certificates />
-        </div>
-        <div className="card">
-          <Seminars />
-        </div>
-        <div className="card">
-          <OtherAchievements />
-        </div>
+        <DashboardSections
+          sections={[
+            { id: "research", component: <Research /> },
+            { id: "projects", component: <Projects /> },
+            { id: "certificates", component: <Certificates /> },
+            { id: "seminars", component: <Seminars /> },
+            { id: "other", component: <OtherAchievements /> },
+          ]}
+        />
       </div>
     </div>
   );

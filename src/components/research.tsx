@@ -3,7 +3,8 @@ import { useDialog, useEntries } from "../hooks";
 import { ResearchDetailsDialog } from "./researchDetailPopUp";
 import { ListDisplay } from "./listDisplay";
 import { FormPopUp } from "./formPopUp";
-import { EntryFormDataType, submitResearchPaper } from "../hooks/postData";
+import { EntryFormDataType, submitEntry } from "../hooks/postData";
+import { Skeleton } from "./skeleton";
 
 export const Research = () => {
   const [reload, setReload] = useState(false);
@@ -28,7 +29,7 @@ export const Research = () => {
   const [selectedPaperId, setSelectedPaperId] = useState("");
 
   if (loading) {
-    return <div className="flex justify-center items-center">Loading...</div>;
+    return <Skeleton type="list" count={2} />;
   }
 
   const openDetailsDialog = (id: string) => {
@@ -69,12 +70,16 @@ export const Research = () => {
               name: "verification_link",
               type: "url",
             },
+
             { label: "Conference Name", name: "conference_name", type: "text" },
-            { label: "Published Date", name: "publish_date", type: "date" },
+            { label: "Published Date", name: "date", type: "date" },
           ]}
           onSubmit={async (formData) => {
             const typedFormData = formData as EntryFormDataType;
-            submitResearchPaper(typedFormData);
+            if (!typedFormData.certificate_of_publication) {
+              delete typedFormData.certificate_of_publication;
+            }
+            submitEntry("researchPapers", typedFormData);
           }}
           title={"Add Research Paper"}
         />
@@ -84,8 +89,7 @@ export const Research = () => {
         <ResearchDetailsDialog
           open={detailsOpen}
           onClose={() => {
-            handleDetailsClose(),
-            refreshData()
+            handleDetailsClose(), refreshData();
           }}
           id={selectedPaperId}
           refreshData={refreshData}

@@ -51,7 +51,7 @@ export default function PieChartWithCenterLabel({
         margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
         slotProps={{ legend: { hidden: true } }}
       >
-        <PieCenterLabel>Rating: {label ? label.toFixed(2) : ""}</PieCenterLabel>
+        <PieCenterLabel>Rating: 9.5</PieCenterLabel>
       </PieChart>
     </div>
   );

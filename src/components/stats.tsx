@@ -4,7 +4,9 @@ export const Stats = ({
   stats: { id: string; value: number; color: string }[];
 }) => {
   if (stats.length === 0) {
-    return <div className="text-gray-500 text-center">No Data Available</div>;
+    return (
+      <div className="text-gray-500 flex items-center justify-center"></div>
+    );
   }
 
   return (

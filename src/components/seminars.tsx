@@ -4,6 +4,7 @@ import { ListDisplay } from "./listDisplay";
 import { FormPopUp } from "./formPopUp";
 import { EntryFormDataType, submitEntry } from "../hooks/postData";
 import { SeminarDetailsDialog } from "./seminarsDetailPopUp";
+import { Skeleton } from "./skeleton";
 
 export const Seminars = () => {
   const [reload, setReload] = useState(false);
@@ -23,8 +24,9 @@ export const Seminars = () => {
 
   const [selectedSeminarId, setSelectedSeminarId] = useState("");
 
-  if (loading)
-    return <div className="flex justify-center items-center">Loading...</div>;
+  if (loading) {
+    return <Skeleton type="list" count={2} />;
+  }
 
   const openDetailsDialog = (id: string) => {
     setSelectedSeminarId(id);
@@ -73,8 +75,7 @@ export const Seminars = () => {
         <SeminarDetailsDialog
           open={detailsOpen}
           onClose={() => {
-            handleDetailsClose(),
-            refreshData()
+            handleDetailsClose(), refreshData();
           }}
           id={selectedSeminarId}
           refreshData={refreshData}

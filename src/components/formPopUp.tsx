@@ -22,6 +22,9 @@ export const FormPopUp = ({
   title,
 }: FormPopUpProps) => {
   const [formData, setFormData] = useState<Record<string, any>>({});
+  const [postImage, setPostImage] = useState<{ myFile: string }>({
+    myFile: "",
+  });
 
   useEffect(() => {
     if (initialData) {
@@ -31,6 +34,20 @@ export const FormPopUp = ({
       }));
     }
   }, [initialData]);
+
+  function convertToBase64(file: File) {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  }
 
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -54,6 +71,14 @@ export const FormPopUp = ({
     }
   };
 
+  const handleFileUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      const base64 = await convertToBase64(file);
+      setPostImage({ ...postImage, myFile: base64 as string });
+    }
+  };
+
   const handleArrayChange = (name: string, value: string[]) => {
     setFormData({
       ...formData,
@@ -63,23 +88,22 @@ export const FormPopUp = ({
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const updatedData = { ...formData };
+    const cleanData = {};
 
-    const fieldsToRemove = ["user", "rating", "createdAt", "updatedAt", "__v"];
+    fields.forEach((field) => {
+      if (formData[field.name] !== undefined) {
+        (cleanData as Record<string, any>)[field.name] = formData[field.name];
+      }
+    });
 
-    fieldsToRemove.forEach((field) => delete updatedData[field]);
     try {
-      await onSubmit(updatedData);
+      await onSubmit(cleanData);
       refreshData();
       onClose();
     } catch (error: any) {
       alert(`Error submitting: ${error.message || "Unknown error"}`);
     }
   };
-
-  const handleUpdateClick = () => {
-    
-  }
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
@@ -114,20 +138,6 @@ export const FormPopUp = ({
                   onChange={(val) => handleArrayChange(field.name, val)}
                 />
               ) : (
-                // <input
-                //   type={field.type}
-                //   name={field.name}
-                //   value={
-                //     field.type === "date" && formData[field.name]
-                //       ? new Date(formData[field.name])
-                //           .toISOString()
-                //           .split("T")[0]
-                //       : formData[field.name] || ""
-                //   }
-                //   onChange={handleInputChange}
-                //   className="w-full p-2 border rounded-md"
-                //   required={field.required}
-                // />
                 <input
                   type={field.type}
                   name={field.name}
@@ -152,7 +162,7 @@ export const FormPopUp = ({
           ))}
 
           <div className="flex justify-center items-center">
-            <button onClick={handleUpdateClick} type="submit" className="button">
+            <button type="submit" className="button">
               {initialData && initialData._id ? "Update" : "Submit"}
             </button>
           </div>

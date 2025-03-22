@@ -2,11 +2,7 @@ import Dialog from "@mui/material/Dialog";
 import axios from "axios";
 import { BACKEND_URL } from "../config";
 import { useEffect, useState } from "react";
-import {
-  deleteEntry,
-  EntryFormDataType,
-  updateResearchPaper,
-} from "../hooks/postData";
+import { deleteEntry, EntryFormDataType, updateEntry } from "../hooks/postData";
 import { FormPopUp } from "./formPopUp";
 import { ResearchPaperTypes } from "../hooks";
 
@@ -42,7 +38,7 @@ export const ResearchDetailsDialog = ({
             headers: {
               Authorization:
                 "Bearer " +
-                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdhbml6YXRpb25fZW1haWxfaWQiOiJyYWh1bC5uYWlyQGJlbm5ldHQuZWR1LmluIiwiaWF0IjoxNzQxNzIyMzU1fQ.UgZyiUhfAyb6fgWnzMZXj3V3ulq8t_PE52jJTSjosqQ",
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdhbml6YXRpb25fZW1haWxfaWQiOiJlMjJjc2V1MTQ5MUBiZW5uZXR0LmVkdS5pbiIsImlhdCI6MTc0MjYwMTE1MH0.REP7xtfWb7xnDWXZOvl3Ts64VJ-Q3LaDTw1DBtG34y4",
             },
           }
         );
@@ -77,7 +73,7 @@ export const ResearchDetailsDialog = ({
               <span className="font-semibold text-gray-700">on</span>
               <span className="text-blue-600">
                 {" "}
-                {paper.publish_date?.split("T")[0] || "an unknown date"}.
+                {paper.date?.split("T")[0] || "an unknown date"}.
               </span>
             </p>
 
@@ -147,7 +143,7 @@ export const ResearchDetailsDialog = ({
                   }
                 }}
                 className="button"
-                disabled={deleting} 
+                disabled={deleting}
               >
                 {deleting ? "Deleting..." : "Delete"}
               </button>
@@ -185,11 +181,15 @@ export const ResearchDetailsDialog = ({
               type: "url",
             },
             { label: "Conference Name", name: "conference_name", type: "text" },
-            { label: "Published Date", name: "publish_date", type: "date" },
+            { label: "Published Date", name: "date", type: "date" },
           ]}
           onSubmit={async (formData) => {
             const typedFormData = formData as EntryFormDataType;
-            updateResearchPaper(typedFormData, typedFormData._id || "");
+            updateEntry(
+              "researchPapers",
+              typedFormData,
+              paper ? paper._id : ""
+            );
           }}
           title={"Update Research Paper"}
         />

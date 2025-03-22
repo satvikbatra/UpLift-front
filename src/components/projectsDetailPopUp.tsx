@@ -36,7 +36,7 @@ export const ProjectDetailsDialog = ({
           headers: {
             Authorization:
               "Bearer " +
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdhbml6YXRpb25fZW1haWxfaWQiOiJyYWh1bC5uYWlyQGJlbm5ldHQuZWR1LmluIiwiaWF0IjoxNzQxNzIyMzU1fQ.UgZyiUhfAyb6fgWnzMZXj3V3ulq8t_PE52jJTSjosqQ",
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdhbml6YXRpb25fZW1haWxfaWQiOiJlMjJjc2V1MTQ5MUBiZW5uZXR0LmVkdS5pbiIsImlhdCI6MTc0MjYwMTE1MH0.REP7xtfWb7xnDWXZOvl3Ts64VJ-Q3LaDTw1DBtG34y4",
           },
         });
         setProject(response.data.project);
@@ -91,9 +91,11 @@ export const ProjectDetailsDialog = ({
                 onClick={async () => {
                   setDeleting(true);
                   try {
-                    await deleteEntry("projects", id);
-                    refreshData();
-                    onClose();
+                    const result = await deleteEntry("projects", id);
+                    if (result) {
+                      refreshData();
+                      onClose();
+                    }
                   } catch (error) {
                     console.error("Error deleting achievement:", error);
                     alert("Failed to delete. Please try again.");
@@ -102,7 +104,7 @@ export const ProjectDetailsDialog = ({
                   }
                 }}
                 className="button"
-                disabled={deleting} 
+                disabled={deleting}
               >
                 {deleting ? "Deleting..." : "Delete"}
               </button>
@@ -155,7 +157,15 @@ export const ProjectDetailsDialog = ({
           ]}
           onSubmit={async (formData) => {
             const typedFormData = formData as EntryFormDataType;
-            updateEntry("projects", typedFormData, typedFormData._id || "");
+            const result = await updateEntry(
+              "projects",
+              typedFormData,
+              typedFormData._id || ""
+            );
+            if (result) {
+              refreshData();
+              setIsUpdateOpen(false);
+            }
           }}
           title={"Update Project Details"}
         />
