@@ -1,6 +1,6 @@
 import { UserDetails } from "../hooks";
 import axios from "axios";
-import { BACKEND_URL } from "../config";
+import { ADMIN_TOKEN, BACKEND_URL, USER_TOKEN } from "../config";
 import { createPDF } from "../components/appraisalPDF";
 
 // Helper function to fetch all entries of a specific type
@@ -10,7 +10,7 @@ const fetchEntries = async (entryType: string): Promise<any[]> => {
       headers: {
         Authorization:
           "Bearer " +
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdhbml6YXRpb25fZW1haWxfaWQiOiJlMjJjc2V1MTQ5MUBiZW5uZXR0LmVkdS5pbiIsImlhdCI6MTc0MjYwMTE1MH0.REP7xtfWb7xnDWXZOvl3Ts64VJ-Q3LaDTw1DBtG34y4",
+          USER_TOKEN,
       },
     });
 
@@ -33,8 +33,6 @@ const fetchEntries = async (entryType: string): Promise<any[]> => {
   }
 };
 
-// Styles are now defined in the AppraisalPDF component
-
 export const generateAppraisalPDF = async (
   userData: UserDetails
 ): Promise<string> => {
@@ -45,9 +43,44 @@ export const generateAppraisalPDF = async (
   const seminars = await fetchEntries("seminars");
   const otherAchievements = await fetchEntries("otherAchievements");
 
+  console.log("researchPapers", researchPapers);
+  console.log("projects", projects);
+  console.log("certificates", certificates);
+  console.log("seminars", seminars);
+  console.log("otherAchievements", otherAchievements)
+
   // Use the react-pdf component to generate the PDF
   return createPDF(
     userData,
+    researchPapers,
+    projects,
+    certificates,
+    seminars,
+    otherAchievements
+  );
+};
+
+export const generateAdminAppraisalPDF = async (
+  userID: string
+): Promise<string> => {
+
+  const response = await axios.get(`${BACKEND_URL}/admin/user/${userID}`, {
+    headers: {
+      Authorization:
+        "Bearer " +
+        ADMIN_TOKEN,
+    },
+  })
+
+  const researchPapers = response.data.user.researchPapers || [];
+  const projects = response.data.user.projects || [];
+  const certificates = response.data.user.certificates || [];
+  const seminars = response.data.user.seminars || [];
+  const otherAchievements = response.data.user.otherAchievements || [];
+
+  // Use the react-pdf component to generate the PDF
+  return createPDF(
+    response.data.user,
     researchPapers,
     projects,
     certificates,
@@ -70,7 +103,7 @@ export const submitAppraisal = async (
           "Content-Type": "application/json",
           Authorization:
             "Bearer " +
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdhbml6YXRpb25fZW1haWxfaWQiOiJlMjJjc2V1MTQ5MUBiZW5uZXR0LmVkdS5pbiIsImlhdCI6MTc0MjYwMTE1MH0.REP7xtfWb7xnDWXZOvl3Ts64VJ-Q3LaDTw1DBtG34y4",
+            USER_TOKEN,
         },
       }
     );

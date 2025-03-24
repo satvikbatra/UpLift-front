@@ -10,9 +10,19 @@ import { Research } from "../components/research";
 import { Seminars } from "../components/seminars";
 import { Skeleton } from "../components/skeleton";
 import { useDetails } from "../hooks";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { AppraisalNotifications } from "../components/appraisalNotification";
 
 export const Dashboard = () => {
   const { loading, details } = useDetails();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loading && details?.is_admin) {
+      navigate("/admin");
+    }
+  }, [loading, details, navigate]);
 
   if (loading) {
     return (
@@ -83,6 +93,7 @@ export const Dashboard = () => {
       </div>
 
       <div className="max-w-6xl mx-auto flex flex-col gap-6 p-4 w-full">
+        <AppraisalNotifications />
         <div className="flex flex-col lg:flex-row gap-6 justify-center h-full w-full">
           <div className="">
             <ProfileCard

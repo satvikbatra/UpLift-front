@@ -1,9 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { BACKEND_URL } from "../config";
+import { ADMIN_TOKEN, BACKEND_URL, USER_TOKEN } from "../config";
 
 export interface UserDetails {
   _id: string;
+  is_admin: boolean;
   full_name: string;
   personal_email_id: string;
   organization_email_id: string;
@@ -23,6 +24,7 @@ export const useDetails = () => {
   const [loading, setLoading] = useState(true);
   const [details, setDetails] = useState<UserDetails>({
     _id: "",
+    is_admin: false,
     profile_image: "",
     full_name: "",
     personal_email_id: "",
@@ -44,7 +46,7 @@ export const useDetails = () => {
         headers: {
           Authorization:
             "Bearer " +
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdhbml6YXRpb25fZW1haWxfaWQiOiJlMjJjc2V1MTQ5MUBiZW5uZXR0LmVkdS5pbiIsImlhdCI6MTc0MjYwMTE1MH0.REP7xtfWb7xnDWXZOvl3Ts64VJ-Q3LaDTw1DBtG34y4",
+            USER_TOKEN,
         },
       })
       .then((response) => {
@@ -136,7 +138,7 @@ export const useEntries = (entry: string, reload: boolean) => {
         headers: {
           Authorization:
             "Bearer " +
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdhbml6YXRpb25fZW1haWxfaWQiOiJlMjJjc2V1MTQ5MUBiZW5uZXR0LmVkdS5pbiIsImlhdCI6MTc0MjYwMTE1MH0.REP7xtfWb7xnDWXZOvl3Ts64VJ-Q3LaDTw1DBtG34y4",
+            USER_TOKEN,
         },
       })
       .then((response) => {
@@ -154,3 +156,51 @@ export const useEntries = (entry: string, reload: boolean) => {
     details,
   };
 };
+
+
+export interface AppraisalTypes {
+  _id: string;
+  user: {
+    _id: string;
+    full_name?: string;
+    department_name?: string;
+    role?: string;
+    organization_email_id?: string;
+    personal_email_id?: string;
+    phone_number?: string;
+    profile_image?: string;
+  };
+  status: string;
+}
+
+export interface AppraisalDetailsTypes {
+  appraisals?: AppraisalTypes[];
+}
+
+export const useAppraisals = (reload: boolean) => {
+  const [loading, setLoading] = useState(true);
+  const [details, setDetails] = useState<AppraisalDetailsTypes>({});
+
+  useEffect(() => {
+    axios
+     .get(`${BACKEND_URL}/admin/appraisals`, {
+        headers: {
+          Authorization:
+            "Bearer " +
+            ADMIN_TOKEN,
+        },
+      })
+     .then((response) => {
+        setDetails(response.data || []);
+        setLoading(false);
+      })
+     .catch((error) => {
+        console.error(`Error fetching appraisals:`, error);
+      })
+  }, [reload]);
+
+  return {
+    loading,
+    details,
+  };
+}

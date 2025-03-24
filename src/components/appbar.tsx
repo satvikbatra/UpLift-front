@@ -14,6 +14,7 @@ export const AppBar = () => {
 
   const handleAppraisalClick = async () => {
     try {
+      // console.log(details)
       setIsGenerating(true);
       const pdfDataUrl = await generateAppraisalPDF(details);
       setPdfUrl(pdfDataUrl);
@@ -61,37 +62,44 @@ export const AppBar = () => {
   return (
     <div className="flex justify-between items-center p-4 max-w-7xl mx-auto w-full">
       <div className="ml-4 text-2xl font-bold">UpLift</div>
-      <div>
-        <button
-          onClick={handleAppraisalClick}
-          disabled={isGenerating}
-          className={`button transition-all duration-200 
-            ${
-              isSubmitted
-                ? "bg-green-500 text-white"
-                : "bg-blue-500 text-white hover:bg-blue-600"
-            } 
-            ${
-              isGenerating ? "opacity-70 !cursor-not-allowed" : "cursor-pointer"
-            }
-          `}
-        >
-          {isGenerating
-            ? "Generating..."
-            : isSubmitted
-            ? "Submitted Successfully!"
-            : "Apply for Appraisal"}
-        </button>
-      </div>
 
-      <AppraisalDialog
-        open={open}
-        onClose={handleClose}
-        pdfUrl={pdfUrl}
-        onSubmit={handleSubmitAppraisal}
-        isSubmitting={isSubmitting}
-        errorMessage={errorMessage}
-      />
+      {(!details.is_admin) ? (
+        <>
+          <div>
+            <button
+              onClick={handleAppraisalClick}
+              disabled={isGenerating}
+              className={`button transition-all duration-200 
+                ${
+                  isSubmitted
+                    ? "bg-green-500 text-white"
+                    : "bg-blue-500 text-white hover:bg-blue-600"
+                } 
+                ${
+                  isGenerating ? "opacity-70 !cursor-not-allowed" : "cursor-pointer"
+                }
+              `}
+            >
+              {isGenerating
+                ? "Generating..."
+                : isSubmitted
+                ? "Submitted Successfully!"
+                : "Apply for Appraisal"}
+            </button>
+          </div>
+
+          <AppraisalDialog
+            open={open}
+            onClose={handleClose}
+            pdfUrl={pdfUrl}
+            onSubmit={handleSubmitAppraisal}
+            isSubmitting={isSubmitting}
+            errorMessage={errorMessage}
+          />
+        </>
+      ) : (
+        <div></div>
+      )}
     </div>
   );
 };

@@ -7,6 +7,7 @@ interface AppraisalDialogProps {
   onSubmit: () => void;
   isSubmitting: boolean;
   errorMessage?: string;
+  isAdmin?: boolean;
 }
 
 export const AppraisalDialog = ({
@@ -16,14 +17,17 @@ export const AppraisalDialog = ({
   onSubmit,
   isSubmitting,
   errorMessage,
+  isAdmin,
 }: AppraisalDialogProps) => {
   return (
     <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
       <div className="p-6 flex flex-col gap-4">
-        <div className="text-xl font-bold">Appraisal Preview</div>
-        <div className="text-sm text-gray-600 mb-2">
-          Please review your appraisal document before submitting.
-        </div>
+        <div className="text-xl font-bold">Appraisal {isAdmin ? "Review" : "Preview"}</div>
+        {!isAdmin && (
+          <div className="text-sm text-gray-600 mb-2">
+            Please review your appraisal document before submitting.
+          </div>
+        )}
 
         <div className="w-full min-h-screen border border-gray-300 rounded-lg overflow-hidden">
           <iframe
@@ -45,19 +49,22 @@ export const AppraisalDialog = ({
               onClick={onClose}
               className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 cursor-pointer"
             >
-              Cancel
+              Close
             </button>
-            <button
-              onClick={onSubmit}
-              disabled={isSubmitting}
-              className={`button hover:bg-blue-600 ${
-                isSubmitting
-                  ? "opacity-70 !cursor-not-allowed"
-                  : "cursor-pointer"
-              }`}
-            >
-              {isSubmitting ? "Submitting..." : "Submit Appraisal"}
-            </button>
+            
+            {!isAdmin && (
+              <button
+                onClick={onSubmit}
+                disabled={isSubmitting}
+                className={`button hover:bg-blue-600 ${
+                  isSubmitting
+                    ? "opacity-70 !cursor-not-allowed"
+                    : "cursor-pointer"
+                }`}
+              >
+                {isSubmitting ? "Submitting..." : "Submit Appraisal"}
+              </button>
+            )}
           </div>
         </div>
       </div>
