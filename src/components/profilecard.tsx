@@ -52,8 +52,7 @@ export const ProfileCard = ({
               alt="Profile"
               className="w-full h-full object-cover"
               onError={(e) => {
-                e.currentTarget.src =
-                  "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXVzZXIiPjxwYXRoIGQ9Ik0yMCA3LjVBNy41IDcuNSAwIDEgMSA1IDcuNWE3LjUgNy41IDAgMCAxIDE1IDBaIi8+PHBhdGggZD0iTTEyIDE1YTYgNiAwIDAgMC02IDZoMTJhNiA2IDAgMCAwLTYtNloiLz48L3N2Zz4=";
+                e.currentTarget.src = avatar;
               }}
             />
           ) : (

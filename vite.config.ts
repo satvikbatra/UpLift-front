@@ -8,4 +8,20 @@ export default defineConfig({
     react(),
     tailwindcss()
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor': ['react', 'react-dom', '@mui/material'],
+          'components': [
+            './src/components/formPopUp.tsx',
+            './src/components/projectsDetailPopUp.tsx',
+            './src/components/certificatesDetailPopUp.tsx'
+          ],
+          'pages': ['./src/pages/admin.tsx', './src/pages/dashboard.tsx']
+        }
+      }
+    },
+    chunkSizeWarningLimit: 800
+  }
 })

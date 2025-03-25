@@ -1,6 +1,6 @@
 import Dialog from "@mui/material/Dialog";
 import axios from "axios";
-import { BACKEND_URL, USER_TOKEN } from "../config";
+import { BACKEND_URL } from "../config";
 import { useEffect, useState } from "react";
 import { deleteEntry, EntryFormDataType, updateEntry } from "../hooks/postData";
 import { FormPopUp } from "./formPopUp";
@@ -40,7 +40,7 @@ export const AchievementDetailsDialog = ({
             headers: {
               Authorization:
                 "Bearer " +
-                USER_TOKEN,
+                localStorage.getItem("token"),
             },
           }
         );

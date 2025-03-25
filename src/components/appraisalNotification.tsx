@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BACKEND_URL, USER_TOKEN } from "../config";
+import { BACKEND_URL } from "../config";
 import axios from "axios";
 
 interface AppraisalNotification {
@@ -18,7 +18,7 @@ export const AppraisalNotifications = () => {
       try {
         const response = await axios.get(`${BACKEND_URL}/user/appraisals`, {
           headers: {
-            Authorization: "Bearer " + USER_TOKEN,
+            Authorization: "Bearer " + localStorage.getItem("token"),
           },
         });
         setAppraisals(response.data.appraisals || []);

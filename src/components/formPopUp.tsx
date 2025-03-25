@@ -22,9 +22,9 @@ export const FormPopUp = ({
   title,
 }: FormPopUpProps) => {
   const [formData, setFormData] = useState<Record<string, any>>({});
-  const [postImage, setPostImage] = useState<{ myFile: string }>({
-    myFile: "",
-  });
+  // const [postImage, setPostImage] = useState<{ myFile: string }>({
+  //   myFile: "",
+  // });
 
   useEffect(() => {
     if (initialData) {
@@ -35,19 +35,19 @@ export const FormPopUp = ({
     }
   }, [initialData]);
 
-  function convertToBase64(file: File) {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
+  // function convertToBase64(file: File) {
+  //   return new Promise((resolve, reject) => {
+  //     const fileReader = new FileReader();
+  //     fileReader.readAsDataURL(file);
 
-      fileReader.onload = () => {
-        resolve(fileReader.result);
-      };
-      fileReader.onerror = (error) => {
-        reject(error);
-      };
-    });
-  }
+  //     fileReader.onload = () => {
+  //       resolve(fileReader.result);
+  //     };
+  //     fileReader.onerror = (error) => {
+  //       reject(error);
+  //     };
+  //   });
+  // }
 
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -71,13 +71,13 @@ export const FormPopUp = ({
     }
   };
 
-  const handleFileUpload = async (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-      const base64 = await convertToBase64(file);
-      setPostImage({ ...postImage, myFile: base64 as string });
-    }
-  };
+  // const handleFileUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+  //   if (e.target.files && e.target.files.length > 0) {
+  //     const file = e.target.files[0];
+  //     const base64 = await convertToBase64(file);
+  //     setPostImage({ ...postImage, myFile: base64 as string });
+  //   }
+  // };
 
   const handleArrayChange = (name: string, value: string[]) => {
     setFormData({

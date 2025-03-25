@@ -21,7 +21,6 @@ function PieCenterLabel({ children }: { children: React.ReactNode }) {
 
 export default function PieChartWithCenterLabel({
   stats = [],
-  label,
 }: {
   stats: { id: string; value: number; color: string }[];
   label?: number;

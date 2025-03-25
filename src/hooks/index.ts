@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { ADMIN_TOKEN, BACKEND_URL, USER_TOKEN } from "../config";
+import { BACKEND_URL } from "../config";
 
 export interface UserDetails {
   _id: string;
@@ -46,7 +46,7 @@ export const useDetails = () => {
         headers: {
           Authorization:
             "Bearer " +
-            USER_TOKEN,
+            localStorage.getItem("token"),
         },
       })
       .then((response) => {
@@ -138,7 +138,7 @@ export const useEntries = (entry: string, reload: boolean) => {
         headers: {
           Authorization:
             "Bearer " +
-            USER_TOKEN,
+            localStorage.getItem("token"),
         },
       })
       .then((response) => {
@@ -187,7 +187,7 @@ export const useAppraisals = (reload: boolean) => {
         headers: {
           Authorization:
             "Bearer " +
-            ADMIN_TOKEN,
+            localStorage.getItem("token"),
         },
       })
      .then((response) => {
@@ -204,3 +204,31 @@ export const useAppraisals = (reload: boolean) => {
     details,
   };
 }
+
+interface UserData {
+  full_name?: string;
+  organization_email_id: string;
+  personal_email_id?: string;
+  password: string;
+}
+
+export const signin = async (userData: UserData) => {
+  try {
+    const response = await axios.post(`${BACKEND_URL}/user/signin`, userData);
+    localStorage.setItem("token", response.data.token);
+    return response.data.user;
+  } catch (error) {
+    console.error("Error signing in:", error);
+    throw error;
+  }
+};
+
+export const signup = async (userData: UserData) => {
+  try {
+    await axios.post(`${BACKEND_URL}/user/register`, userData);
+    return true;
+  } catch (error) {
+    console.error("Error signing up:", error);
+    throw error;
+  }
+};

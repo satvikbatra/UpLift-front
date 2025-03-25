@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ADMIN_TOKEN, BACKEND_URL } from "../config";
+import { BACKEND_URL } from "../config";
 
 export const updateAppraisalStatus = async (appraisalId: string, status: "approved" | "rejected") => {
   try {
@@ -8,7 +8,7 @@ export const updateAppraisalStatus = async (appraisalId: string, status: "approv
       { status },
       {
         headers: {
-          Authorization: `Bearer ${ADMIN_TOKEN}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       }
     );

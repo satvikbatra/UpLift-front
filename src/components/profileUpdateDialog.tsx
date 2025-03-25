@@ -1,7 +1,7 @@
 import { FormPopUp } from "./formPopUp";
 import { UserDetails } from "../hooks";
 import axios from "axios";
-import { BACKEND_URL, USER_TOKEN } from "../config";
+import { BACKEND_URL } from "../config";
 
 interface ProfileUpdateDialogProps {
   open: boolean;
@@ -49,7 +49,7 @@ export const ProfileUpdateDialog = ({
         headers: {
           Authorization:
             "Bearer " +
-            USER_TOKEN,
+            localStorage.getItem("token"),
           "Content-Type": "application/json",
         },
       });

@@ -1,3 +1,1 @@
 export const BACKEND_URL = 'https://seft-appraisal.onrender.com'
-export const ADMIN_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdhbml6YXRpb25fZW1haWxfaWQiOiJhZG1pbkBiZW5uZXR0LmVkdS5pbiIsImlhdCI6MTc0Mjc3Mjg0NX0.Cx1HDnPAWCzFisTdnKCnh6HB12nzIefqk6ndzBUQUqo'
-export const USER_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdhbml6YXRpb25fZW1haWxfaWQiOiJlMjJjc2V1MTQ5MUBiZW5uZXR0LmVkdS5pbiIsImlhdCI6MTc0MjYwMTE1MH0.REP7xtfWb7xnDWXZOvl3Ts64VJ-Q3LaDTw1DBtG34y4'

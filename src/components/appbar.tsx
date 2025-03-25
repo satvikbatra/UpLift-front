@@ -9,7 +9,7 @@ export const AppBar = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [pdfUrl, setPdfUrl] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const { details } = useDetails();
+  const { details, loading } = useDetails();
   const { open, handleOpen, handleClose } = useDialog();
 
   const handleAppraisalClick = async () => {
@@ -63,7 +63,9 @@ export const AppBar = () => {
     <div className="flex justify-between items-center p-4 max-w-7xl mx-auto w-full">
       <div className="ml-4 text-2xl font-bold">UpLift</div>
 
-      {(!details.is_admin) ? (
+      {loading ? (
+        <div className="w-32 h-10 bg-gray-200 animate-pulse rounded"></div>
+      ) : !details.is_admin ? (
         <>
           <div>
             <button

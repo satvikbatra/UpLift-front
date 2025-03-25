@@ -36,7 +36,7 @@ export const SeminarDetailsDialog = ({
           headers: {
             Authorization:
               "Bearer " +
-              USER_TOKEN,
+              localStorage.getItem("token"),
           },
         });
         setSeminar(response.data.seminar);

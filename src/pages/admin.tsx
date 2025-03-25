@@ -1,5 +1,6 @@
 import { AppBar } from "../components/appbar"
 import { AdminProfileCard } from "../components/adminProfileCard"
+import { Skeleton } from "../components/skeleton"
 import { useAppraisals, useDialog } from "../hooks";
 import { useState } from "react";
 import { generateAdminAppraisalPDF } from "../services/pdfService";
@@ -11,11 +12,16 @@ export const Admin = () => {
     const appraisals = details?.appraisals || [];
 
     const [pdfUrl, setPdfUrl] = useState("");
-    const [isGenerating, setIsGenerating] = useState(false);
+    const [, setIsGenerating] = useState(false);
     const { open, handleOpen, handleClose } = useDialog();
 
     if (loading) {
-        return <div>Loading...</div>
+        return <div className="relative min-h-screen bg-blue-200 flex-1 flex-col">
+            <div className="sticky top-0 z-50 w-full mb-4 bg-white flex items-center">
+                <AppBar />
+            </div>
+            <Skeleton type="admin" count={3} />
+        </div>
     }
 
     const handleCardClick = async (userId: string) => {

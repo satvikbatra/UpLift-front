@@ -1,6 +1,6 @@
 import { UserDetails } from "../hooks";
 import axios from "axios";
-import { ADMIN_TOKEN, BACKEND_URL, USER_TOKEN } from "../config";
+import { BACKEND_URL } from "../config";
 import { createPDF } from "../components/appraisalPDF";
 
 // Helper function to fetch all entries of a specific type
@@ -10,7 +10,7 @@ const fetchEntries = async (entryType: string): Promise<any[]> => {
       headers: {
         Authorization:
           "Bearer " +
-          USER_TOKEN,
+          localStorage.getItem("token"),
       },
     });
 
@@ -68,7 +68,7 @@ export const generateAdminAppraisalPDF = async (
     headers: {
       Authorization:
         "Bearer " +
-        ADMIN_TOKEN,
+        localStorage.getItem("token"),
     },
   })
 
@@ -103,7 +103,7 @@ export const submitAppraisal = async (
           "Content-Type": "application/json",
           Authorization:
             "Bearer " +
-            USER_TOKEN,
+            localStorage.getItem("token"),
         },
       }
     );

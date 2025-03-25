@@ -1,5 +1,5 @@
 import axios from "axios";
-import { BACKEND_URL, USER_TOKEN } from "../config";
+import { BACKEND_URL } from "../config";
 
 export interface EntryFormDataType {
   _id?: string;
@@ -20,7 +20,7 @@ export const deleteEntry = async (prop: string, id: string) => {
       headers: {
         Authorization:
           "Bearer " +
-          USER_TOKEN,
+          localStorage.getItem("token"),
       },
     });
     alert(`${prop} deleted successfully`);
@@ -56,7 +56,7 @@ export const submitEntry = async (
     headers: {
       Authorization:
         "Bearer " +
-        USER_TOKEN,
+        localStorage.getItem("token"),
       "Content-Type": "application/json",
     },
   });
@@ -95,7 +95,7 @@ export const updateEntry = async (
     headers: {
       Authorization:
         "Bearer " +
-        USER_TOKEN,
+        localStorage.getItem("token"),
       "Content-Type": "application/json",
     },
   });
