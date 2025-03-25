@@ -90,6 +90,16 @@ yarn dev
 4. Generate performance reports
 5. Manage user accounts
 
+## Demo Credentials
+
+### Faculty Member
+- Email: e22cseu1491@bennett.edu.in
+- Password: 12345678
+
+### Administrator
+- Email: admin@bennett.edu.in
+- Password: admin123
+
 ## Contributing
 
 1. Fork the repository
