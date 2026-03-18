@@ -5,10 +5,10 @@ import { ArrayInput } from "./arrayInput";
 interface FormPopUpProps {
   open: boolean;
   onClose: () => void;
-  initialData?: Record<string, any>;
+  initialData?: Record<string, unknown>;
   refreshData: () => void;
   fields: { label: string; name: string; type: string; required?: boolean }[];
-  onSubmit: (formData: Record<string, any>) => Promise<void>;
+  onSubmit: (formData: Record<string, unknown>) => Promise<void>;
   title: string;
 }
 
@@ -63,11 +63,11 @@ export const FormPopUp = ({
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const cleanData = {};
+    const cleanData: Record<string, unknown> = {};
 
     fields.forEach((field) => {
       if (formData[field.name] !== undefined) {
-        (cleanData as Record<string, any>)[field.name] = formData[field.name];
+        cleanData[field.name] = formData[field.name];
       }
     });
 
@@ -75,9 +75,21 @@ export const FormPopUp = ({
       await onSubmit(cleanData);
       refreshData();
       onClose();
-    } catch (error: any) {
-      alert(`Error submitting: ${error.message || "Unknown error"}`);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      alert(`Error submitting: ${errorMessage}`);
     }
+  };
+
+  const getInputValue = (field: { name: string; type: string }): string | string[] => {
+    const value = formData[field.name];
+    if (field.type === "date" && value && typeof value === "string") {
+      return value.split("T")[0];
+    }
+    if (field.type === "array" && Array.isArray(value)) {
+      return value as string[];
+    }
+    return typeof value === "string" ? value : "";
   };
 
   return (
@@ -94,7 +106,7 @@ export const FormPopUp = ({
               {field.type === "textarea" ? (
                 <textarea
                   name={field.name}
-                  value={formData[field.name] || ""}
+                  value={getInputValue(field) as string}
                   onChange={handleInputChange}
                   className="w-full p-2 border rounded-md min-h-[100px] resize-none"
                   required={field.required}
@@ -109,20 +121,14 @@ export const FormPopUp = ({
               ) : field.type === "array" ? (
                 <ArrayInput
                   name={field.name}
-                  value={formData[field.name] || []}
+                  value={getInputValue(field) as string[]}
                   onChange={(val) => handleArrayChange(field.name, val)}
                 />
               ) : (
                 <input
                   type={field.type}
                   name={field.name}
-                  value={
-                    field.type === "date" && formData[field.name]
-                      ? new Date(formData[field.name])
-                          .toISOString()
-                          .split("T")[0]
-                      : formData[field.name] || ""
-                  }
+                  value={getInputValue(field) as string}
                   onChange={(e) => {
                     setFormData((prev) => ({
                       ...prev,
