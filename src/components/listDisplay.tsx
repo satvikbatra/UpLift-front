@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-interface ListItem {
+export interface ListItem {
   _id: string;
   title: string;
   description: string;
