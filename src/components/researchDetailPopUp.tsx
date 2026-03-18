@@ -4,7 +4,7 @@ import { BACKEND_URL } from "../config";
 import { useEffect, useState } from "react";
 import { deleteEntry, EntryFormDataType, updateEntry } from "../hooks/postData";
 import { FormPopUp } from "./formPopUp";
-import { ResearchPaperTypes } from "../hooks";
+import { ResearchPaperTypes } from "../types";
 
 interface ResearchDetailsDialogProps {
   open: boolean;
