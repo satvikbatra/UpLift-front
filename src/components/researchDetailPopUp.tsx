@@ -95,38 +95,6 @@ export const ResearchDetailsDialog = ({
               </div>
             )}
 
-            {/* {paper.certificate_of_publication && (
-                <div className="mt-4">
-                    <p className="text-gray-600 font-medium">Certificate:</p>
-
-                    {paper.certificate_of_publication.match(/\.(jpeg|jpg|png)$/) && (
-                        <img 
-                            src={paper.certificate_of_publication} 
-                            alt="certificate_of_publication" 
-                            className="mt-2 w-full max-w-md rounded-lg shadow-md border"
-                        />
-                    )}
-
-                    {paper.certificate_of_publication.endsWith(".pdf") && (
-                        <iframe 
-                            src={paper.certificate_of_publication} 
-                            className="mt-2 w-full h-96 border rounded-lg shadow-md"
-                        />
-                    )}
-
-                    {!paper.certificate_of_publication.match(/\.(jpeg|jpg|png|pdf)$/) && (
-                        <a 
-                            href={paper.certificate_of_publication} 
-                            target="_blank" 
-                            rel="noopener noreferrer" 
-                            className="text-blue-500 underline hover:text-blue-700"
-                        >
-                            Download certificate_of_publication
-                        </a>
-                    )}
-                </div>
-            )} */}
-
             <div className="flex justify-end cursor-pointer gap-2">
               <button
                 onClick={async () => {
