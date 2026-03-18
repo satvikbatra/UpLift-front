@@ -4,7 +4,7 @@ import { BACKEND_URL } from "../config";
 import { useEffect, useState } from "react";
 import { deleteEntry, EntryFormDataType, updateEntry } from "../hooks/postData";
 import { FormPopUp } from "./formPopUp";
-import { CertificatesTypes } from "../hooks";
+import { CertificatesTypes } from "../types";
 
 interface CertificateDetailsDialogProps {
   open: boolean;
