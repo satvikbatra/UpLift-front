@@ -21,10 +21,7 @@ export const FormPopUp = ({
   onSubmit,
   title,
 }: FormPopUpProps) => {
-  const [formData, setFormData] = useState<Record<string, any>>({});
-  // const [postImage, setPostImage] = useState<{ myFile: string }>({
-  //   myFile: "",
-  // });
+  const [formData, setFormData] = useState<Record<string, unknown>>({});
 
   useEffect(() => {
     if (initialData) {
