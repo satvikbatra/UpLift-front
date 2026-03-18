@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { signin, signup } from "../hooks";
+import { signin, signup } from "../services/authService";
 import { useNavigate } from "react-router-dom";
 
 type AuthFormProps = {
