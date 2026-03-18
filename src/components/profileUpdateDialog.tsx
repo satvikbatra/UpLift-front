@@ -1,5 +1,5 @@
 import { FormPopUp } from "./formPopUp";
-import { UserDetails } from "../hooks";
+import { UserDetails } from "../types";
 import axios from "axios";
 import { BACKEND_URL } from "../config";
 
