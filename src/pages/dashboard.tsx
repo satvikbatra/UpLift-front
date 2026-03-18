@@ -13,6 +13,7 @@ import { useDetails } from "../hooks";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { AppraisalNotifications } from "../components/appraisalNotification";
+import { calculateStats } from "../utils/stats";
 
 export const Dashboard = () => {
   const { loading, details } = useDetails();
