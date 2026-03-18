@@ -1,10 +1,15 @@
-import { useState, lazy, Suspense, ComponentType } from "react";
+import { useState } from "react";
 import { useDialog, useEntries } from "../../hooks";
 import { ListDisplay, ListItem } from "../listDisplay";
 import { FormPopUp } from "../formPopUp";
 import { EntryFormDataType, submitEntry } from "../../hooks/postData";
 import { Skeleton } from "../skeleton";
 import { AchievementConfig } from "./achievementConfigs";
+import { ResearchDetailsDialog } from "../researchDetailPopUp";
+import { ProjectDetailsDialog } from "../projectsDetailPopUp";
+import { CertificateDetailsDialog } from "../certificatesDetailPopUp";
+import { SeminarDetailsDialog } from "../seminarsDetailPopUp";
+import { AchievementDetailsDialog } from "../otherAchievementsPopUp";
 
 interface DetailDialogProps {
   open: boolean;
@@ -13,12 +18,12 @@ interface DetailDialogProps {
   refreshData: () => void;
 }
 
-const detailComponentImports: Record<string, () => Promise<{ [key: string]: ComponentType<DetailDialogProps> }>> = {
-  ResearchDetailsDialog: () => import("../researchDetailPopUp"),
-  ProjectDetailsDialog: () => import("../projectsDetailPopUp"),
-  CertificateDetailsDialog: () => import("../certificatesDetailPopUp"),
-  SeminarDetailsDialog: () => import("../seminarsDetailPopUp"),
-  AchievementDetailsDialog: () => import("../otherAchievementsPopUp"),
+const detailComponents: Record<string, React.ComponentType<DetailDialogProps>> = {
+  ResearchDetailsDialog,
+  ProjectDetailsDialog,
+  CertificateDetailsDialog,
+  SeminarDetailsDialog,
+  AchievementDetailsDialog,
 };
 
 interface AchievementSectionProps {
@@ -58,10 +63,7 @@ export const AchievementSection = ({ config }: AchievementSectionProps) => {
   };
 
   const DetailComponent = config.detailComponentName
-    ? lazy(async () => {
-        const module = await detailComponentImports[config.detailComponentName]();
-        return { default: module[config.detailComponentName] };
-      })
+    ? detailComponents[config.detailComponentName]
     : null;
 
   const handleSubmit = async (formData: Record<string, unknown>) => {
@@ -92,17 +94,15 @@ export const AchievementSection = ({ config }: AchievementSectionProps) => {
       />
 
       {selectedId && DetailComponent && (
-        <Suspense fallback={<Skeleton type="card" />}>
-          <DetailComponent
-            open={detailsOpen}
-            onClose={() => {
-              handleDetailsClose();
-              refreshData();
-            }}
-            id={selectedId}
-            refreshData={refreshData}
-          />
-        </Suspense>
+        <DetailComponent
+          open={detailsOpen}
+          onClose={() => {
+            handleDetailsClose();
+            refreshData();
+          }}
+          id={selectedId}
+          refreshData={refreshData}
+        />
       )}
     </div>
   );
