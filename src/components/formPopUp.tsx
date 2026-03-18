@@ -54,14 +54,6 @@ export const FormPopUp = ({
     }
   };
 
-  // const handleFileUpload = async (e: ChangeEvent<HTMLInputElement>) => {
-  //   if (e.target.files && e.target.files.length > 0) {
-  //     const file = e.target.files[0];
-  //     const base64 = await convertToBase64(file);
-  //     setPostImage({ ...postImage, myFile: base64 as string });
-  //   }
-  // };
-
   const handleArrayChange = (name: string, value: string[]) => {
     setFormData({
       ...formData,
