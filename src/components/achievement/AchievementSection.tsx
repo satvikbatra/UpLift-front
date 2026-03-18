@@ -1,6 +1,6 @@
 import { useState, lazy, Suspense, ComponentType } from "react";
 import { useDialog, useEntries } from "../../hooks";
-import { ListDisplay } from "../listDisplay";
+import { ListDisplay, ListItem } from "../listDisplay";
 import { FormPopUp } from "../formPopUp";
 import { EntryFormDataType, submitEntry } from "../../hooks/postData";
 import { Skeleton } from "../skeleton";
@@ -13,7 +13,7 @@ interface DetailDialogProps {
   refreshData: () => void;
 }
 
-const detailComponentImports: Record<string, () => Promise<{ default: ComponentType<DetailDialogProps> }>> = {
+const detailComponentImports: Record<string, () => Promise<{ [key: string]: ComponentType<DetailDialogProps> }>> = {
   ResearchDetailsDialog: () => import("../researchDetailPopUp"),
   ProjectDetailsDialog: () => import("../projectsDetailPopUp"),
   CertificateDetailsDialog: () => import("../certificatesDetailPopUp"),
@@ -30,7 +30,7 @@ export const AchievementSection = ({ config }: AchievementSectionProps) => {
   const [selectedId, setSelectedId] = useState("");
 
   const refreshData = () => {
-    setReload((prev) => !prev);
+    setReload((prev: boolean) => !prev);
   };
 
   const { loading, details } = useEntries(config.endpoint, reload);
@@ -46,7 +46,7 @@ export const AchievementSection = ({ config }: AchievementSectionProps) => {
     handleClose: handleDetailsClose,
   } = useDialog();
 
-  const items = (details as Record<string, unknown[]>)[config.endpoint] || [];
+  const items = (details as Record<string, ListItem[]>)[config.endpoint] || [];
 
   if (loading) {
     return <Skeleton type="list" count={2} />;
@@ -58,11 +58,14 @@ export const AchievementSection = ({ config }: AchievementSectionProps) => {
   };
 
   const DetailComponent = config.detailComponentName
-    ? lazy(detailComponentImports[config.detailComponentName])
+    ? lazy(async () => {
+        const module = await detailComponentImports[config.detailComponentName]();
+        return { default: module[config.detailComponentName] };
+      })
     : null;
 
   const handleSubmit = async (formData: Record<string, unknown>) => {
-    let typedFormData = formData as EntryFormDataType;
+    let typedFormData = { ...formData } as EntryFormDataType;
     if (config.prepareFormData) {
       typedFormData = config.prepareFormData(typedFormData);
     }
