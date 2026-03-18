@@ -5,7 +5,7 @@ import { ArrayInput } from "./arrayInput";
 interface FormPopUpProps {
   open: boolean;
   onClose: () => void;
-  initialData?: Record<string, unknown>;
+  initialData?: Record<string, unknown> | undefined;
   refreshData: () => void;
   fields: { label: string; name: string; type: string; required?: boolean }[];
   onSubmit: (formData: Record<string, unknown>) => Promise<void>;
