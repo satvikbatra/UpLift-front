@@ -1,6 +1,6 @@
 # Contributing to UpLift Faculty Performance Management System
 
-Thank you for your interest in contributing to the UpLift Faculty Performance Management System! We welcome contributions from the community and are grateful for your help in making this project better.
+Thank you for your interest in contributing to UpLift! We welcome community contributions and appreciate your help in improving this project.
 
 ## Getting Started
 
@@ -12,6 +12,8 @@ Before you begin, ensure you have the following installed:
 - npm or yarn
 
 ### Development Setup
+
+Follow these steps to set up the project locally:
 
 1. Fork the repository
 2. Clone your fork:
