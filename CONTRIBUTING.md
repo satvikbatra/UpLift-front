@@ -1,6 +1,6 @@
 # Contributing to UpLift Faculty Performance Management System
 
-Thank you for your interest in contributing to UpLift! We welcome community contributions and appreciate your help in improving this project.
+Thank you for your interest in contributing to **UpLift** — a Faculty Performance Management System designed to streamline academic evaluations and feedback. We welcome community contributions and appreciate your help in making this project better for educators everywhere.
 
 ## Getting Started
 
@@ -13,7 +13,7 @@ Before you begin, ensure you have the following installed:
 
 ### Development Setup
 
-Follow these steps to set up the project locally:
+To get started with development, you'll need to set up the project locally. Follow these steps to configure your environment:
 
 1. Fork the repository
 2. Clone your fork:
