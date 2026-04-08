@@ -62,9 +62,38 @@ export const AppBar = () => {
     }
   };
 
+  const isHomePage = location.pathname === '/home';
+  const isTodoPage = location.pathname === '/todo';
+
   return (
     <div className="flex justify-between items-center p-4 max-w-7xl mx-auto w-full">
-      <div className="ml-4 text-2xl font-bold">UpLift</div>
+      <div className="flex items-center gap-6">
+        <div className="ml-4 text-2xl font-bold">UpLift</div>
+        {!loading && !details.is_admin && (
+          <nav className="hidden sm:flex gap-2">
+            <button
+              onClick={() => navigate('/home')}
+              className={`px-3 py-1 rounded transition-colors ${
+                isHomePage
+                  ? 'bg-blue-100 text-blue-700'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+              }`}
+            >
+              Home
+            </button>
+            <button
+              onClick={() => navigate('/todo')}
+              className={`px-3 py-1 rounded transition-colors ${
+                isTodoPage
+                  ? 'bg-blue-100 text-blue-700'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+              }`}
+            >
+              Todo List
+            </button>
+          </nav>
+        )}
+      </div>
 
       {loading ? (
         <div className="w-32 h-10 bg-gray-200 animate-pulse rounded"></div>
