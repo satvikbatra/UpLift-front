@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useDetails, useDialog } from "../hooks";
 import { generateAppraisalPDF, submitAppraisal } from "../services/pdfService";
 import { AppraisalDialog } from "./appraisalDialog";
@@ -11,6 +12,8 @@ export const AppBar = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const { details, loading } = useDetails();
   const { open, handleOpen, handleClose } = useDialog();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleAppraisalClick = async () => {
     try {
