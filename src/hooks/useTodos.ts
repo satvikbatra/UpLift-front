@@ -2,6 +2,21 @@ import { useState, useEffect, useCallback } from 'react';
 import { Todo, TodoFilterType } from '../types/todo';
 
 const STORAGE_KEY = 'uplift_todos';
+const MAX_TITLE_LENGTH = 100;
+const MAX_DESCRIPTION_LENGTH = 500;
+
+const isValidTodo = (item: unknown): item is Todo => {
+  if (typeof item !== 'object' || item === null) return false;
+  const todo = item as Record<string, unknown>;
+  return (
+    typeof todo.id === 'string' &&
+    typeof todo.title === 'string' &&
+    typeof todo.description === 'string' &&
+    typeof todo.completed === 'boolean' &&
+    typeof todo.createdAt === 'number' &&
+    typeof todo.updatedAt === 'number'
+  );
+};
 
 export const useTodos = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
