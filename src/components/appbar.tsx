@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useDetails, useDialog } from "../hooks";
 import { generateAppraisalPDF, submitAppraisal } from "../services/pdfService";
 import { AppraisalDialog } from "./appraisalDialog";
+import { ROUTES } from "../constants/routes";
 
 export const AppBar = () => {
   const [isGenerating, setIsGenerating] = useState(false);
@@ -62,8 +63,8 @@ export const AppBar = () => {
     }
   };
 
-  const isHomePage = location.pathname === '/home';
-  const isTodoPage = location.pathname === '/todo';
+  const isHomePage = location.pathname === ROUTES.HOME;
+  const isTodoPage = location.pathname === ROUTES.TODO;
 
   return (
     <div className="flex justify-between items-center p-4 max-w-7xl mx-auto w-full">
@@ -72,7 +73,8 @@ export const AppBar = () => {
         {!loading && !details.is_admin && (
           <nav className="hidden sm:flex gap-2">
             <button
-              onClick={() => navigate('/home')}
+              onClick={() => navigate(ROUTES.HOME)}
+              aria-current={isHomePage ? 'page' : undefined}
               className={`px-3 py-1 rounded transition-colors ${
                 isHomePage
                   ? 'bg-blue-100 text-blue-700'
@@ -82,7 +84,8 @@ export const AppBar = () => {
               Home
             </button>
             <button
-              onClick={() => navigate('/todo')}
+              onClick={() => navigate(ROUTES.TODO)}
+              aria-current={isTodoPage ? 'page' : undefined}
               className={`px-3 py-1 rounded transition-colors ${
                 isTodoPage
                   ? 'bg-blue-100 text-blue-700'
