@@ -29,7 +29,8 @@ export const useTodos = () => {
       if (stored) {
         const parsed = JSON.parse(stored);
         if (Array.isArray(parsed)) {
-          setTodos(parsed);
+          const validTodos = parsed.filter(isValidTodo);
+          setTodos(validTodos);
         }
       }
     } catch (error) {
