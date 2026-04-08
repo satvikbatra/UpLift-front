@@ -50,7 +50,7 @@ export const useTodos = () => {
   }, [todos, isLoaded]);
 
   const generateId = () => {
-    return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    return `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
   };
 
   const addTodo = useCallback((title: string, description: string = '') => {
@@ -60,8 +60,8 @@ export const useTodos = () => {
     const now = Date.now();
     const newTodo: Todo = {
       id: generateId(),
-      title: trimmedTitle.slice(0, 100),
-      description: description.trim().slice(0, 500),
+      title: trimmedTitle.slice(0, MAX_TITLE_LENGTH),
+      description: description.trim().slice(0, MAX_DESCRIPTION_LENGTH),
       completed: false,
       createdAt: now,
       updatedAt: now,
@@ -90,8 +90,8 @@ export const useTodos = () => {
         todo.id === id
           ? {
               ...todo,
-              title: trimmedTitle.slice(0, 100),
-              description: description.trim().slice(0, 500),
+              title: trimmedTitle.slice(0, MAX_TITLE_LENGTH),
+              description: description.trim().slice(0, MAX_DESCRIPTION_LENGTH),
               updatedAt: Date.now(),
             }
           : todo
