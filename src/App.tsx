@@ -4,6 +4,7 @@ import { Dashboard } from "./pages/dashboard";
 import { Admin } from "./pages/admin";
 import { SignIn } from "./pages/signin";
 import { SignUp } from "./pages/signup";
+import { Todo } from "./pages/todo";
 import { ProtectedRoute } from "./components/protectedRoute";
 
 function App() {
