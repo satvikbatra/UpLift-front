@@ -12,7 +12,7 @@ export const useTodos = () => {
     if (stored) {
       try {
         const parsed = JSON.parse(stored);
-        setTodos(parsed);
+        if (Array.isArray(parsed)) setTodos(parsed);
       } catch {
         setTodos([]);
       }
@@ -22,7 +22,11 @@ export const useTodos = () => {
 
   useEffect(() => {
     if (isLoaded) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+      } catch {
+        // QuotaExceededError or other storage errors - silently fail
+      }
     }
   }, [todos, isLoaded]);
 
@@ -31,7 +35,7 @@ export const useTodos = () => {
     if (!trimmed) return;
 
     const newTodo: Todo = {
-      id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`,
       text: trimmed,
       completed: false,
       createdAt: Date.now(),
