@@ -114,4 +114,5 @@ This project is licensed under the [MIT License](LICENSE)
 
 ## Support
 
-For support, please contact [your-support-email]
+For support, please contact uplift@gmail.com
+
