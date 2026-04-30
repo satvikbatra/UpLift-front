@@ -1,18 +1,8 @@
 import axios from "axios";
 import { BACKEND_URL } from "../config";
+import { EntryFormDataType } from "../types";
 
-export interface EntryFormDataType {
-  _id?: string;
-  title: string;
-  description: string;
-  certificate_of_publication?: File | null;
-  verification_link?: string;
-  conference_name?: string;
-  github_link?: string;
-  tech_stack?: string[];
-  date?: string | "";
-  rating?: number;
-}
+export type { EntryFormDataType };
 
 export const deleteEntry = async (prop: string, id: string) => {
   try {

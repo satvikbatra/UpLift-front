@@ -5,10 +5,10 @@ import { ArrayInput } from "./arrayInput";
 interface FormPopUpProps {
   open: boolean;
   onClose: () => void;
-  initialData?: Record<string, any>;
+  initialData?: Record<string, unknown> | undefined;
   refreshData: () => void;
   fields: { label: string; name: string; type: string; required?: boolean }[];
-  onSubmit: (formData: Record<string, any>) => Promise<void>;
+  onSubmit: (formData: Record<string, unknown>) => Promise<void>;
   title: string;
 }
 
@@ -21,10 +21,7 @@ export const FormPopUp = ({
   onSubmit,
   title,
 }: FormPopUpProps) => {
-  const [formData, setFormData] = useState<Record<string, any>>({});
-  // const [postImage, setPostImage] = useState<{ myFile: string }>({
-  //   myFile: "",
-  // });
+  const [formData, setFormData] = useState<Record<string, unknown>>({});
 
   useEffect(() => {
     if (initialData) {
@@ -34,20 +31,6 @@ export const FormPopUp = ({
       }));
     }
   }, [initialData]);
-
-  // function convertToBase64(file: File) {
-  //   return new Promise((resolve, reject) => {
-  //     const fileReader = new FileReader();
-  //     fileReader.readAsDataURL(file);
-
-  //     fileReader.onload = () => {
-  //       resolve(fileReader.result);
-  //     };
-  //     fileReader.onerror = (error) => {
-  //       reject(error);
-  //     };
-  //   });
-  // }
 
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -71,14 +54,6 @@ export const FormPopUp = ({
     }
   };
 
-  // const handleFileUpload = async (e: ChangeEvent<HTMLInputElement>) => {
-  //   if (e.target.files && e.target.files.length > 0) {
-  //     const file = e.target.files[0];
-  //     const base64 = await convertToBase64(file);
-  //     setPostImage({ ...postImage, myFile: base64 as string });
-  //   }
-  // };
-
   const handleArrayChange = (name: string, value: string[]) => {
     setFormData({
       ...formData,
@@ -88,11 +63,11 @@ export const FormPopUp = ({
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const cleanData = {};
+    const cleanData: Record<string, unknown> = {};
 
     fields.forEach((field) => {
       if (formData[field.name] !== undefined) {
-        (cleanData as Record<string, any>)[field.name] = formData[field.name];
+        cleanData[field.name] = formData[field.name];
       }
     });
 
@@ -100,9 +75,21 @@ export const FormPopUp = ({
       await onSubmit(cleanData);
       refreshData();
       onClose();
-    } catch (error: any) {
-      alert(`Error submitting: ${error.message || "Unknown error"}`);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      alert(`Error submitting: ${errorMessage}`);
     }
+  };
+
+  const getInputValue = (field: { name: string; type: string }): string | string[] => {
+    const value = formData[field.name];
+    if (field.type === "date" && value && typeof value === "string") {
+      return value.split("T")[0];
+    }
+    if (field.type === "array" && Array.isArray(value)) {
+      return value as string[];
+    }
+    return typeof value === "string" ? value : "";
   };
 
   return (
@@ -119,7 +106,7 @@ export const FormPopUp = ({
               {field.type === "textarea" ? (
                 <textarea
                   name={field.name}
-                  value={formData[field.name] || ""}
+                  value={getInputValue(field) as string}
                   onChange={handleInputChange}
                   className="w-full p-2 border rounded-md min-h-[100px] resize-none"
                   required={field.required}
@@ -134,20 +121,14 @@ export const FormPopUp = ({
               ) : field.type === "array" ? (
                 <ArrayInput
                   name={field.name}
-                  value={formData[field.name] || []}
+                  value={getInputValue(field) as string[]}
                   onChange={(val) => handleArrayChange(field.name, val)}
                 />
               ) : (
                 <input
                   type={field.type}
                   name={field.name}
-                  value={
-                    field.type === "date" && formData[field.name]
-                      ? new Date(formData[field.name])
-                          .toISOString()
-                          .split("T")[0]
-                      : formData[field.name] || ""
-                  }
+                  value={getInputValue(field) as string}
                   onChange={(e) => {
                     setFormData((prev) => ({
                       ...prev,

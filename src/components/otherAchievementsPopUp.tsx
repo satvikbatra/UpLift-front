@@ -4,7 +4,7 @@ import { BACKEND_URL } from "../config";
 import { useEffect, useState } from "react";
 import { deleteEntry, EntryFormDataType, updateEntry } from "../hooks/postData";
 import { FormPopUp } from "./formPopUp";
-import { OtherAchievementsTypes } from "../hooks";
+import { OtherAchievementsTypes } from "../types";
 
 interface AchievementDetailsDialogProps {
   open: boolean;

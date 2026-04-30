@@ -1,9 +1,16 @@
-import { UserDetails } from "../hooks";
+import { UserDetails } from "../types";
 import axios from "axios";
 import { BACKEND_URL } from "../config";
 import { createPDF } from "../components/appraisalPDF";
 
-// Helper function to fetch all entries of a specific type
+const entryTypeMapping: Record<string, string> = {
+  researchPapers: "researchPapers",
+  projects: "projects",
+  certificates: "certificates",
+  seminars: "seminars",
+  otherAchievements: "otherAchievements",
+};
+
 const fetchEntries = async (entryType: string): Promise<any[]> => {
   try {
     const response = await axios.get(`${BACKEND_URL}/${entryType}`, {
@@ -14,19 +21,8 @@ const fetchEntries = async (entryType: string): Promise<any[]> => {
       },
     });
 
-    if (entryType === "researchPapers") {
-      return response.data.researchPapers || [];
-    } else if (entryType === "projects") {
-      return response.data.projects || [];
-    } else if (entryType === "certificates") {
-      return response.data.certificates || [];
-    } else if (entryType === "seminars") {
-      return response.data.seminars || [];
-    } else if (entryType === "otherAchievements") {
-      return response.data.otherAchievements || [];
-    }
-
-    return response.data || [];
+    const dataKey = entryTypeMapping[entryType];
+    return dataKey ? response.data[dataKey] || [] : response.data || [];
   } catch (error) {
     console.error(`Error fetching ${entryType}:`, error);
     return [];

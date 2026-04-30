@@ -1,5 +1,5 @@
-import { ReactNode, useEffect, useState } from "react";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { ReactNode, useEffect, useState, CSSProperties } from "react";
+import { DragDropContext, Droppable, Draggable, DropResult, DraggableProvided, DraggableStateSnapshot } from "react-beautiful-dnd";
 
 interface Section {
   id: string;
@@ -10,28 +10,53 @@ interface DashboardSectionsProps {
   sections: Section[];
 }
 
+const getDraggableStyle = (
+  style: DraggableProvided["draggableProps"]["style"],
+  isDragging: boolean
+): CSSProperties => ({
+  ...style,
+  transform: isDragging
+    ? `${style?.transform} scale(1.02)`
+    : style?.transform,
+});
+
+const getCardClasses = (isDragging: boolean): string =>
+  `card transition-all duration-200 relative group ${
+    isDragging ? "shadow-xl bg-gray-50" : "hover:shadow-lg"
+  }`;
+
+const getIndicatorClasses = (isDragging: boolean): string =>
+  `absolute -left-3 top-1/2 -translate-y-1/2 w-2 h-12 bg-gray-300 rounded-full transition-opacity duration-200 ${
+    isDragging ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+  }`;
+
+const getRightIndicatorClasses = (isDragging: boolean): string =>
+  `absolute -right-3 top-1/2 -translate-y-1/2 w-2 h-12 bg-gray-300 rounded-full transition-opacity duration-200 ${
+    isDragging ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+  }`;
+
 export const DashboardSections = ({ sections }: DashboardSectionsProps) => {
   const [orderedSections, setOrderedSections] = useState<Section[]>([]);
 
   useEffect(() => {
     const savedOrder = localStorage.getItem("dashboardSectionsOrder");
     if (savedOrder) {
-      const orderIds = JSON.parse(savedOrder);
-      const orderedSections = orderIds
-        .map((id: string) => sections.find((section) => section.id === id))
-        .filter(Boolean);
+      const orderIds = JSON.parse(savedOrder) as string[];
+      const ordered = orderIds
+        .map((id) => sections.find((section) => section.id === id))
+        .filter((section): section is Section => section !== undefined);
 
       const newSections = sections.filter(
         (section) => !orderIds.includes(section.id)
       );
 
-      setOrderedSections([...orderedSections, ...newSections]);
+      setOrderedSections([...ordered, ...newSections]);
     } else {
       setOrderedSections(sections);
     }
   }, [sections]);
 
-  const handleDragEnd = (result: any) => {
+  const handleDragEnd = (result: DropResult) => {
     if (!result.destination) return;
 
     const items = Array.from(orderedSections);
@@ -60,25 +85,17 @@ export const DashboardSections = ({ sections }: DashboardSectionsProps) => {
                 draggableId={section.id}
                 index={index}
               >
-                {(provided, snapshot) => (
+                {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
                   <div
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     className="w-full transition-transform duration-200 hover:scale-[1.01]"
-                    style={{
-                      ...provided.draggableProps.style,
-                      transform: snapshot.isDragging
-                        ? `${provided.draggableProps.style?.transform} scale(1.02)`
-                        : provided.draggableProps.style?.transform,
-                    }}
+                    style={getDraggableStyle(
+                      provided.draggableProps.style,
+                      snapshot.isDragging
+                    )}
                   >
-                    <div
-                      className={`card transition-all duration-200 relative group ${
-                        snapshot.isDragging
-                          ? "shadow-xl bg-gray-50"
-                          : "hover:shadow-lg"
-                      }`}
-                    >
+                    <div className={getCardClasses(snapshot.isDragging)}>
                       <div
                         {...provided.dragHandleProps}
                         className="h-6 w-full flex items-center justify-center cursor-move hover:bg-gray-100 rounded-t-2xl border-b border-gray-200"
@@ -92,20 +109,8 @@ export const DashboardSections = ({ sections }: DashboardSectionsProps) => {
                           ))}
                         </div>
                       </div>
-                      <div
-                        className={`absolute -left-3 top-1/2 -translate-y-1/2 w-2 h-12 bg-gray-300 rounded-full transition-opacity duration-200 ${
-                          snapshot.isDragging
-                            ? "opacity-100"
-                            : "opacity-0 group-hover:opacity-100"
-                        }`}
-                      />
-                      <div
-                        className={`absolute -right-3 top-1/2 -translate-y-1/2 w-2 h-12 bg-gray-300 rounded-full transition-opacity duration-200 ${
-                          snapshot.isDragging
-                            ? "opacity-100"
-                            : "opacity-0 group-hover:opacity-100"
-                        }`}
-                      />
+                      <div className={getIndicatorClasses(snapshot.isDragging)} />
+                      <div className={getRightIndicatorClasses(snapshot.isDragging)} />
                       {section.component}
                     </div>
                   </div>
