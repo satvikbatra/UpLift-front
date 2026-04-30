@@ -4,6 +4,7 @@ import { Dashboard } from "./pages/dashboard";
 import { Admin } from "./pages/admin";
 import { SignIn } from "./pages/signin";
 import { SignUp } from "./pages/signup";
+import { Todo } from "./pages/todo";
 import { ProtectedRoute } from "./components/protectedRoute";
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
         <Routes>
           <Route path="/home" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+          <Route path="/todos" element={<ProtectedRoute><Todo /></ProtectedRoute>} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/" element={<SignIn />} />
