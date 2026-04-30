@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useDetails, useDialog } from "../hooks";
 import { generateAppraisalPDF, submitAppraisal } from "../services/pdfService";
 import { AppraisalDialog } from "./appraisalDialog";
+import { ROUTES } from "../constants/routes";
 
 export const AppBar = () => {
   const [isGenerating, setIsGenerating] = useState(false);
@@ -11,6 +13,8 @@ export const AppBar = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const { details, loading } = useDetails();
   const { open, handleOpen, handleClose } = useDialog();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleAppraisalClick = async () => {
     try {
@@ -59,9 +63,40 @@ export const AppBar = () => {
     }
   };
 
+  const isHomePage = location.pathname === ROUTES.HOME;
+  const isTodoPage = location.pathname === ROUTES.TODO;
+
   return (
     <div className="flex justify-between items-center p-4 max-w-7xl mx-auto w-full">
-      <div className="ml-4 text-2xl font-bold">UpLift</div>
+      <div className="flex items-center gap-6">
+        <div className="ml-4 text-2xl font-bold">UpLift</div>
+        {!loading && !details.is_admin && (
+          <nav className="hidden sm:flex gap-2">
+            <button
+              onClick={() => navigate(ROUTES.HOME)}
+              aria-current={isHomePage ? 'page' : undefined}
+              className={`px-3 py-1 rounded transition-colors ${
+                isHomePage
+                  ? 'bg-blue-100 text-blue-700'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+              }`}
+            >
+              Home
+            </button>
+            <button
+              onClick={() => navigate(ROUTES.TODO)}
+              aria-current={isTodoPage ? 'page' : undefined}
+              className={`px-3 py-1 rounded transition-colors ${
+                isTodoPage
+                  ? 'bg-blue-100 text-blue-700'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+              }`}
+            >
+              Todo List
+            </button>
+          </nav>
+        )}
+      </div>
 
       {loading ? (
         <div className="w-32 h-10 bg-gray-200 animate-pulse rounded"></div>
